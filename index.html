@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Shippori+Mincho+B1:wght@400;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Serif JP', 'ヒラギノ明朝 ProN', serif;
+      background: #f7f3ee;
+    }
+
+    /* ── プレースホルダーブロック ── */
+    .placeholder {
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f7f3ee;
+      color: #bbb3a8;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       短歌セクション
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tanka-section {
+      position: relative;
+      background: #07060d;
+      padding: 110px 24px 130px;
+      overflow: hidden;
+    }
+
+    /* オーロラ背景グラデーション */
+    .tanka-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -5%,  rgba(90, 45, 150, 0.55) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at  5% 95%,  rgba(40, 20, 110, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 35% at 95% 85%,  rgba(80, 15,  90, 0.30) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    /* パーティクル用 canvas */
+    .tanka-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* コンテンツ */
+    .tanka-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* イントロテキスト */
+    .tanka-intro {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 2.6;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      margin-bottom: 52px;
+    }
+
+    /* 装飾ライン */
+    .tanka-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 64px;
+    }
+    .tanka-rule-line {
+      width: 72px;
+      height: 1px;
+    }
+    .tanka-rule-line--left  { background: linear-gradient(to right, transparent, rgba(200,165,95,0.4)); }
+    .tanka-rule-line--right { background: linear-gradient(to left,  transparent, rgba(200,165,95,0.4)); }
+    .tanka-rule-gem {
+      width: 5px;
+      height: 5px;
+      border: 1px solid rgba(200,165,95,0.55);
+      transform: rotate(45deg);
+    }
+
+    /* 短歌ブロック（スクロール発火前は非表示） */
+    .tanka-poem {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity  1.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 1.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .tanka-poem.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 短歌テキスト */
+    .tanka-text {
+      display: block;
+      font-family: 'Shippori Mincho B1', 'ヒラギノ明朝 ProN', serif;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 2.5;
+      letter-spacing: 0.22em;
+      color: #eedeb5;
+      text-shadow:
+        0 0 24px rgba(238, 210, 160, 0.55),
+        0 0 60px rgba(200, 155, 75, 0.30),
+        0 2px 6px rgba(0, 0, 0, 0.6);
+      transition: text-shadow 0.5s ease;
+    }
+
+    /* ホバーで輝度アップ */
+    .tanka-poem:hover .tanka-text {
+      text-shadow:
+        0 0 16px rgba(255, 235, 175, 0.85),
+        0 0 50px rgba(220, 170, 80, 0.55),
+        0 0 90px rgba(180, 120, 40, 0.35);
+    }
+
+    /* 詩の間の区切り */
+    .tanka-sep {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 68px 0;
+    }
+    .tanka-sep-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(200,165,95,0.30);
+    }
+    .tanka-sep-dot--mid {
+      width: 4px;
+      height: 4px;
+      background: rgba(200,165,95,0.50);
+    }
+
+    /* ── パーティクルアニメーション（JS 制御） ── */
+  </style>
+</head>
+<body>
+
+  <!-- 上のブロック（プレースホルダー） -->
+  <div class="placeholder">― 上のセクション ―</div>
+
+  <!-- ━━━ 短歌セクション ━━━ -->
+  <section class="tanka-section" id="tanka">
+    <canvas class="tanka-canvas" id="tankaCanvas"></canvas>
+
+    <div class="tanka-inner">
+
+      <!-- イントロ -->
+      <p class="tanka-intro">
+        歌人でもある著者によって<br>
+        各章に添えられた短歌が、<br>
+        物語を彩ります。
+      </p>
+
+      <!-- 上部装飾ライン -->
+      <div class="tanka-rule">
+        <div class="tanka-rule-line tanka-rule-line--left"></div>
+        <div class="tanka-rule-gem"></div>
+        <div class="tanka-rule-line tanka-rule-line--right"></div>
+      </div>
+
+      <!-- 短歌 1 -->
+      <div class="tanka-poem" data-delay="0">
+        <span class="tanka-text">君のしたいことは私のしたいこと</span>
+        <span class="tanka-text">合わせ鏡の美しい夜</span>
+      </div>
+
+      <!-- 区切り -->
+      <div class="tanka-sep">
+        <div class="tanka-sep-dot"></div>
+        <div class="tanka-sep-dot tanka-sep-dot--mid"></div>
+        <div class="tanka-sep-dot"></div>
+      </div>
+
+      <!-- 短歌 2 -->
+      <div class="tanka-poem" data-delay="180">
+        <span class="tanka-text">生きるとは危険なことだ</span>
+        <span class="tanka-text">毒草を誤食するとか君と逢うとか</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 下のブロック（プレースホルダー） -->
+  <div class="placeholder">― 下のセクション ―</div>
+
+  <script>
+    // ── スクロール連動フェードイン ──
+    const poems = document.querySelectorAll('.tanka-poem');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const delay = parseInt(e.target.dataset.delay || 0);
+        setTimeout(() => e.target.classList.add('is-visible'), delay);
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.3 });
+    poems.forEach(p => io.observe(p));
+
+    // ── Canvas パーティクル（金の塵が舞い上がる） ──
+    const canvas = document.getElementById('tankaCanvas');
+    const ctx    = canvas.getContext('2d');
+    const section = document.getElementById('tanka');
+
+    let W, H, particles = [];
+
+    function resize() {
+      W = canvas.width  = section.offsetWidth;
+      H = canvas.height = section.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+
+    class Particle {
+      constructor(stagger) {
+        this.init(stagger);
+      }
+      init(stagger = false) {
+        this.x       = Math.random() * W;
+        this.y       = stagger ? Math.random() * H : H + Math.random() * 40;
+        this.r       = 0.4 + Math.random() * 1.4;
+        this.vy      = -(0.15 + Math.random() * 0.45);
+        this.vx      = (Math.random() - 0.5) * 0.18;
+        this.hue     = 35 + Math.random() * 20;
+        this.light   = 60 + Math.random() * 22;
+        this.life    = 0;
+        this.maxLife = 220 + Math.floor(Math.random() * 180);
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life++;
+        if (this.life > this.maxLife) this.init();
+      }
+      draw() {
+        const t     = this.life / this.maxLife;
+        const alpha = t < 0.12
+          ? (t / 0.12) * 0.65
+          : t > 0.82
+            ? ((1 - t) / 0.18) * 0.65
+            : 0.65 * (1 - t * 0.45);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 72%, ${this.light}%, ${alpha.toFixed(3)})`;
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = Array.from({ length: 70 }, () => new Particle(true));
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(loop);
+    }
+
+    initParticles();
+    loop();
+  </script>
+
+</body>
+</html>
