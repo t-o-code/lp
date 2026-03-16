@@ -101,13 +101,13 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 .tanka-rule-line--l{background:linear-gradient(to right,transparent,rgba(200,165,95,.4))}
 .tanka-rule-line--r{background:linear-gradient(to left,transparent,rgba(200,165,95,.4))}
 .tanka-rule-gem{width:5px;height:5px;border:1px solid rgba(200,165,95,.55);transform:rotate(45deg)}
-.tanka-poem{text-align:center;opacity:0;transform:translateY(28px);transition:opacity 1.3s cubic-bezier(.22,.61,.36,1),transform 1.3s cubic-bezier(.22,.61,.36,1)}
-.tanka-poem.is-visible{opacity:1;transform:translateY(0)}
-.tanka-text{display:block;font-family:'Shippori Mincho B1','ヒラギノ明朝 ProN',serif;font-size:clamp(1.25rem,3.2vw,1.65rem);line-height:2.5;letter-spacing:.22em;color:#eedeb5;text-shadow:0 0 24px rgba(238,210,160,.55),0 0 60px rgba(200,155,75,.3),0 2px 6px rgba(0,0,0,.6);transition:text-shadow .5s ease}
-.tanka-poem:hover .tanka-text{text-shadow:0 0 16px rgba(255,235,175,.85),0 0 50px rgba(220,170,80,.55),0 0 90px rgba(180,120,40,.35)}
-.tanka-sep{display:flex;align-items:center;justify-content:center;gap:12px;margin:68px 0}
-.tanka-sep-dot{width:3px;height:3px;border-radius:50%;background:rgba(200,165,95,.3)}
-.tanka-sep-dot--mid{width:4px;height:4px;background:rgba(200,165,95,.5)}
+.tanka-vset{display:flex;flex-direction:row;justify-content:center;align-items:flex-start;gap:clamp(32px,9vw,90px)}
+.tanka-vgroup{display:flex;flex-direction:row;gap:clamp(10px,2.5vw,22px)}
+.tanka-vcol{writing-mode:vertical-rl;text-orientation:mixed;font-family:'Shippori Mincho B1','ヒラギノ明朝 ProN',serif;font-size:clamp(1.05rem,2.4vw,1.4rem);line-height:2.2;letter-spacing:.18em;color:#eedeb5;text-shadow:0 0 24px rgba(238,210,160,.55),0 0 60px rgba(200,155,75,.3)}
+.tanka-vgroup:hover .tanka-vcol{text-shadow:0 0 16px rgba(255,235,175,.85),0 0 50px rgba(220,170,80,.55),0 0 90px rgba(180,120,40,.35);transition:text-shadow .5s ease}
+@keyframes tankaCharIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+.tanka-vchar{opacity:0;display:inline}
+.tanka-vset.is-visible .tanka-vchar{animation:tankaCharIn .55s ease forwards}
 
 /* Back to top */
 #btt{position:fixed;bottom:28px;right:28px;width:48px;height:48px;border-radius:50%;background:rgba(212,150,122,.15);border:1px solid rgba(212,150,122,.4);color:#E8A88A;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s ease;z-index:100;text-decoration:none}
@@ -245,23 +245,18 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 <div class="tanka-rule-line tanka-rule-line--r"></div>
 </div>
 
+<!-- 縦書き短歌 -->
+<div class="tanka-vset" id="tankaVset">
 <!-- 短歌 1 -->
-<div class="tanka-poem" data-delay="0">
-<p class="tanka-text">君のしたいことは私のしたいこと</p>
-<p class="tanka-text">合わせ鏡の美しい夜</p>
+<div class="tanka-vgroup">
+<div class="tanka-vcol">君のしたいことは私のしたいこと</div>
+<div class="tanka-vcol">合わせ鏡の美しい夜</div>
 </div>
-
-<!-- 区切り -->
-<div class="tanka-sep">
-<div class="tanka-sep-dot"></div>
-<div class="tanka-sep-dot tanka-sep-dot--mid"></div>
-<div class="tanka-sep-dot"></div>
-</div>
-
 <!-- 短歌 2 -->
-<div class="tanka-poem" data-delay="180">
-<p class="tanka-text">生きるとは危険なことだ</p>
-<p class="tanka-text">毒草を誤食するとか君と逢うとか</p>
+<div class="tanka-vgroup">
+<div class="tanka-vcol">生きるとは危険なことだ</div>
+<div class="tanka-vcol">毒草を誤食するとか君と逢うとか</div>
+</div>
 </div>
 
 </div>
@@ -286,7 +281,6 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 <div class="fade-in" style="margin-top:56px;margin-left:calc(clamp(0px,3vw,40px) * -1);margin-right:calc(clamp(0px,3vw,40px) * -1)">
 <div style="padding:clamp(36px,6vw,56px) clamp(32px,6vw,72px);background:linear-gradient(160deg,rgba(170,108,42,.32) 0%,rgba(148,92,34,.22) 55%,rgba(168,107,42,.32) 100%);border-top:1px solid rgba(205,155,62,.48);border-bottom:1px solid rgba(205,155,62,.48);border-radius:0;position:relative;overflow:hidden">
 <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 65% at 50% 50%,rgba(215,148,55,.1),transparent);pointer-events:none"></div>
-<p class="mincho" style="text-align:center;font-size:clamp(10px,2vw,12px);letter-spacing:6px;color:rgba(215,168,75,.8);margin-bottom:12px;font-weight:500;position:relative">◆&emsp;もっと楽しむために&emsp;◆</p>
 <p class="mincho" style="text-align:center;font-size:clamp(17px,3.8vw,22px);letter-spacing:3px;color:#F5E4C0;margin-bottom:28px;font-weight:700;position:relative">物語をさらに楽しむために</p>
 <p class="gothic body-text" style="max-width:520px;margin:0 auto;position:relative">『辺境恋愛詩』には前日譚があります。シガとナガノが初登場する『凍土二人行黒スープ付き』が、約10年の時を経て2025年に『凍土二人行黒スープ付き［増補改訂版］』（東京創元文庫）として刊行されました。<br>もちろん『辺境恋愛詩』から読み始めても楽しめますが、ふたりの出会いから物語を追いかけたい方は、ぜひこの文庫本もお読みください。</p>
 </div>
@@ -416,9 +410,34 @@ if(bt){if(y>600)bt.classList.add("show");else bt.classList.remove("show")}
 var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target)}})},{threshold:.1});
 document.querySelectorAll(".fade-in,.fade-left,.fade-right").forEach(function(el){obs.observe(el)});
 
-// Tanka poem fade-in
-var tankaObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(!e.isIntersecting)return;var d=parseInt(e.target.dataset.delay||0);setTimeout(function(){e.target.classList.add("is-visible")},d);tankaObs.unobserve(e.target)})},{threshold:.3});
-document.querySelectorAll(".tanka-poem").forEach(function(p){tankaObs.observe(p)});
+// Tanka vertical character reveal
+(function(){
+  var vset=document.getElementById("tankaVset");
+  if(!vset)return;
+  var delay=0;
+  vset.querySelectorAll(".tanka-vcol").forEach(function(col,ci){
+    var text=col.textContent.trim();
+    col.textContent="";
+    var start=delay;
+    text.split("").forEach(function(ch,i){
+      var s=document.createElement("span");
+      s.className="tanka-vchar";
+      s.textContent=ch;
+      s.style.animationDelay=(start+i*.055)+"s";
+      col.appendChild(s);
+    });
+    delay+=text.length*.055+.12;
+    if(ci===1)delay+=.65; // 2首の間に間を置く
+  });
+  var vio=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      e.target.classList.add("is-visible");
+      vio.unobserve(e.target);
+    });
+  },{threshold:.2});
+  vio.observe(vset);
+})();
 
 // Tanka canvas particles
 (function(){
