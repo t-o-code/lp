@@ -247,16 +247,8 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 
 <!-- 縦書き短歌 -->
 <div class="tanka-vset" id="tankaVset">
-<!-- 短歌 1 -->
-<div class="tanka-vgroup">
-<div class="tanka-vcol">君のしたいことは私のしたいこと</div>
-<div class="tanka-vcol">合わせ鏡の美しい夜</div>
-</div>
-<!-- 短歌 2 -->
-<div class="tanka-vgroup">
-<div class="tanka-vcol">生きるとは危険なことだ</div>
-<div class="tanka-vcol">毒草を誤食するとか君と逢うとか</div>
-</div>
+<div class="tanka-vcol">君のしたいことは私のしたいこと合わせ鏡の美しい夜</div>
+<div class="tanka-vcol">生きるとは危険なことだ毒草を誤食するとか君と逢うとか</div>
 </div>
 
 </div>
@@ -427,7 +419,7 @@ document.querySelectorAll(".fade-in,.fade-left,.fade-right").forEach(function(el
       col.appendChild(s);
     });
     delay+=text.length*.055+.12;
-    if(ci===1)delay+=.65; // 2首の間に間を置く
+    if(ci===0)delay+=.65; // 2首の間に間を置く
   });
   var vio=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
