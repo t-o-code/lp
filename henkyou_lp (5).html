@@ -283,11 +283,12 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 </div>
 </div>
 <!-- Prequel -->
-<div class="fade-in" style="margin-top:40px">
-<div style="padding:clamp(28px,5vw,40px);background:linear-gradient(135deg,rgba(212,150,122,.08),rgba(107,127,168,.05));border:1px solid rgba(212,150,122,.2);border-radius:6px;position:relative;overflow:hidden">
-<div style="position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(to bottom,#D4967A,rgba(107,127,168,.5))"></div>
-<p class="mincho" style="font-size:clamp(16px,3.5vw,20px);letter-spacing:2px;color:#F0EDF5;margin-bottom:16px;font-weight:700;padding-left:16px">物語をさらに楽しむために</p>
-<p class="gothic body-text" style="padding-left:16px">『辺境恋愛詩』には前日譚があります。シガとナガノが初登場する『凍土二人行黒スープ付き』が、約10年の時を経て2025年に『凍土二人行黒スープ付き［増補改訂版］』（東京創元文庫）として刊行されました。<br>もちろん『辺境恋愛詩』から読み始めても楽しめますが、ふたりの出会いから物語を追いかけたい方は、ぜひこの文庫本もお読みください。</p>
+<div class="fade-in" style="margin-top:56px;margin-left:calc(clamp(0px,3vw,40px) * -1);margin-right:calc(clamp(0px,3vw,40px) * -1)">
+<div style="padding:clamp(36px,6vw,56px) clamp(32px,6vw,72px);background:linear-gradient(160deg,rgba(170,108,42,.32) 0%,rgba(148,92,34,.22) 55%,rgba(168,107,42,.32) 100%);border-top:1px solid rgba(205,155,62,.48);border-bottom:1px solid rgba(205,155,62,.48);border-radius:0;position:relative;overflow:hidden">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 65% at 50% 50%,rgba(215,148,55,.1),transparent);pointer-events:none"></div>
+<p class="mincho" style="text-align:center;font-size:clamp(10px,2vw,12px);letter-spacing:6px;color:rgba(215,168,75,.8);margin-bottom:12px;font-weight:500;position:relative">◆&emsp;もっと楽しむために&emsp;◆</p>
+<p class="mincho" style="text-align:center;font-size:clamp(17px,3.8vw,22px);letter-spacing:3px;color:#F5E4C0;margin-bottom:28px;font-weight:700;position:relative">物語をさらに楽しむために</p>
+<p class="gothic body-text" style="max-width:520px;margin:0 auto;position:relative">『辺境恋愛詩』には前日譚があります。シガとナガノが初登場する『凍土二人行黒スープ付き』が、約10年の時を経て2025年に『凍土二人行黒スープ付き［増補改訂版］』（東京創元文庫）として刊行されました。<br>もちろん『辺境恋愛詩』から読み始めても楽しめますが、ふたりの出会いから物語を追いかけたい方は、ぜひこの文庫本もお読みください。</p>
 </div>
 </div>
 </div>
@@ -373,8 +374,38 @@ body{background:#07080F;color:#E8E4F0;font-family:'Zen Kaku Gothic New',sans-ser
 <a href="#top" id="btt" aria-label="トップへ戻る">&#8593;</a>
 
 <script>
-// Stars
-!function(){var c=document.getElementById("stars"),x=c.getContext("2d");function r(){c.width=c.offsetWidth;c.height=c.offsetHeight}r();window.addEventListener("resize",r);var s=[];for(var i=0;i<80;i++)s.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.3,a:Math.random(),sp:Math.random()*.005+.002,d:Math.random()>.5?1:-1});!function d(){x.clearRect(0,0,c.width,c.height);s.forEach(function(t){t.a+=t.sp*t.d;if(t.a>=1||t.a<=.1)t.d*=-1;x.beginPath();x.arc(t.x,t.y,t.r,0,Math.PI*2);x.fillStyle="rgba(220,215,235,"+t.a+")";x.fill()});requestAnimationFrame(d)}()}();
+// Stars — 3-layer depth with parallax + corona glow
+!function(){
+  var c=document.getElementById("stars"),x=c.getContext("2d"),sy=0;
+  window.addEventListener("scroll",function(){sy=window.scrollY},{passive:true});
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;build();}
+  var s=[];
+  function build(){
+    s=[];
+    // Layer 0: distant — tiny, slow, cool white
+    for(var i=0;i<130;i++)s.push({rx:Math.random(),ry:Math.random(),r:.15+Math.random()*.38,a:.15+Math.random()*.5,sp:.0008+Math.random()*.0018,d:Math.random()>.5?1:-1,lyr:0,rgb:[215,220,242]});
+    // Layer 1: mid — medium, warm/cool mix
+    for(var i=0;i<55;i++){var w=Math.random()>.55;s.push({rx:Math.random(),ry:Math.random(),r:.38+Math.random()*.55,a:.25+Math.random()*.5,sp:.002+Math.random()*.0035,d:Math.random()>.5?1:-1,lyr:1,rgb:w?[255,232,185]:[188,210,255]});}
+    // Layer 2: close — larger, faster twinkle, glow
+    for(var i=0;i<18;i++){var w=Math.random()>.4;s.push({rx:Math.random(),ry:Math.random(),r:.85+Math.random()*.95,a:.45+Math.random()*.4,sp:.004+Math.random()*.007,d:Math.random()>.5?1:-1,lyr:2,rgb:w?[255,228,165]:[218,234,255],glow:true});}
+    // Layer 2: corona heroes — very bright with halo
+    for(var i=0;i<6;i++)s.push({rx:Math.random(),ry:Math.random(),r:1.55+Math.random()*.75,a:.72+Math.random()*.25,sp:.003+Math.random()*.004,d:Math.random()>.5?1:-1,lyr:2,rgb:[255,246,220],glow:true,corona:true});
+  }
+  resize();window.addEventListener("resize",resize);
+  var pf=[0,.028,.07];
+  !function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    s.forEach(function(t){
+      t.a+=t.sp*t.d;if(t.a>=1||t.a<=.02)t.d*=-1;
+      var px=t.rx*c.width;
+      var py=((t.ry*c.height - pf[t.lyr]*sy)%c.height+c.height)%c.height;
+      if(t.corona){var g=x.createRadialGradient(px,py,0,px,py,t.r*8);g.addColorStop(0,"rgba("+t.rgb+","+(t.a*.45)+")");g.addColorStop(1,"rgba("+t.rgb+",0)");x.beginPath();x.arc(px,py,t.r*8,0,Math.PI*2);x.fillStyle=g;x.fill();}
+      else if(t.glow){var g2=x.createRadialGradient(px,py,0,px,py,t.r*3.5);g2.addColorStop(0,"rgba("+t.rgb+","+(t.a*.38)+")");g2.addColorStop(1,"rgba("+t.rgb+",0)");x.beginPath();x.arc(px,py,t.r*3.5,0,Math.PI*2);x.fillStyle=g2;x.fill();}
+      x.beginPath();x.arc(px,py,t.r,0,Math.PI*2);x.fillStyle="rgba("+t.rgb[0]+","+t.rgb[1]+","+t.rgb[2]+","+t.a+")";x.fill();
+    });
+    requestAnimationFrame(loop);
+  }();
+}();
 // Scroll
 window.addEventListener("scroll",function(){
 var si=document.getElementById("scroll-ind");var bt=document.getElementById("btt");var y=window.scrollY;
